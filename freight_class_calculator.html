@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Freight Class Calculator | Instant LTL Density Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #0f4c3a 0%, #1e6b5a 100%);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Powered by Ribbon */
+        .powered-by-ribbon {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(15, 76, 58, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            padding: 0.5rem 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            z-index: 1000;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.9);
+            width: auto;
+            max-width: 250px;
+            white-space: nowrap;
+        }
+
+        .loadsmart-logo {
+            height: 18px;
+            width: auto;
+        }
+
+        /* Adjust hero section to account for ribbon */
+        .hero {
+            padding-top: calc(6rem + 60px);
+            padding-bottom: 6rem;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, #00D7D7 0%, #84F11E 100%);
+            color: #0f4c3a;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 215, 215, 0.3);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding-top: calc(6rem + 60px);
+            padding-bottom: 6rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 800'%3E%3Cdefs%3E%3ClinearGradient id='grad1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2300D7D7' stop-opacity='0.15'/%3E%3Cstop offset='100%25' stop-color='%2384F11E' stop-opacity='0.08'/%3E%3C/linearGradient%3E%3ClinearGradient id='grad2' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2384F11E' stop-opacity='0.12'/%3E%3Cstop offset='100%25' stop-color='%2300D7D7' stop-opacity='0.06'/%3E%3C/linearGradient%3E%3CradialGradient id='radial1' cx='50%25' cy='50%25' r='50%25'%3E%3Cstop offset='0%25' stop-color='%2300D7D7' stop-opacity='0.2'/%3E%3Cstop offset='100%25' stop-color='%2300D7D7' stop-opacity='0'/%3E%3C/radialGradient%3E%3C/defs%3E%3Cg fill='url(%23grad1)'%3E%3Ccircle cx='200' cy='150' r='80'%3E%3CanimateTransform attributeName='transform' attributeType='XML' type='translate' dur='20s' repeatCount='indefinite' values='0,0; 50,30; 0,0'/%3E%3C/circle%3E%3Ccircle cx='800' cy='200' r='120'%3E%3CanimateTransform attributeName='transform' attributeType='XML' type='translate' dur='25s' repeatCount='indefinite' values='0,0; -30,50; 0,0'/%3E%3C/circle%3E%3Ccircle cx='1000' cy='400' r='60'%3E%3CanimateTransform attributeName='transform' attributeType='XML' type='translate' dur='15s' repeatCount='indefinite' values='0,0; 40,-20; 0,0'/%3E%3C/circle%3E%3Cellipse cx='600' cy='100' rx='150' ry='80' fill='url(%23radial1)'%3E%3CanimateTransform attributeName='transform' attributeType='XML' type='translate' dur='30s' repeatCount='indefinite' values='0,0; -40,60; 0,0'/%3E%3C/ellipse%3E%3Cellipse cx='300' cy='600' rx='200' ry='100' fill='url(%23grad2)'%3E%3CanimateTransform attributeName='transform' attributeType='XML' type='translate' dur='35s' repeatCount='indefinite' values='0,0; 60,-30; 0,0'/%3E%3C/ellipse%3E%3Cpath d='M100,600 Q300,500 500,600 T900,600 L900,800 L100,800 Z' opacity='0.12'%3E%3CanimateTransform attributeName='transform' attributeType='XML' type='translate' dur='30s' repeatCount='indefinite' values='0,0; 20,10; 0,0'/%3E%3C/path%3E%3Cpath d='M300,100 Q500,50 700,100 T1100,100 L1100,0 L300,0 Z' opacity='0.1'%3E%3CanimateTransform attributeName='transform' attributeType='XML' type='translate' dur='35s' repeatCount='indefinite' values='0,0; -15,20; 0,0'/%3E%3C/path%3E%3C/g%3E%3Cg fill='none' stroke='%2300D7D7' stroke-width='1' opacity='0.2'%3E%3Cpath d='M0,300 Q300,250 600,300 T1200,300' stroke-dasharray='5,5'%3E%3Canimate attributeName='stroke-dashoffset' dur='20s' repeatCount='indefinite' values='0; 40'/%3E%3C/path%3E%3Cpath d='M0,500 Q400,450 800,500 T1200,500' stroke-dasharray='3,7'%3E%3Canimate attributeName='stroke-dashoffset' dur='25s' repeatCount='indefinite' values='40; 0'/%3E%3C/path%3E%3Cpath d='M0,150 Q200,100 400,150 T800,150' stroke-dasharray='2,3'%3E%3Canimate attributeName='stroke-dashoffset' dur='18s' repeatCount='indefinite' values='0; 20'/%3E%3C/path%3E%3C/g%3E%3Cg fill='%2384F11E' opacity='0.08'%3E%3Cpolygon points='150,300 200,250 250,300 200,350'%3E%3CanimateTransform attributeName='transform' attributeType='XML' type='rotate' dur='40s' repeatCount='indefinite' values='0 200 300; 360 200 300'/%3E%3C/polygon%3E%3Cpolygon points='950,150 1000,100 1050,150 1000,200'%3E%3CanimateTransform attributeName='transform' attributeType='XML' type='rotate' dur='45s' repeatCount='indefinite' values='360 1000 150; 0 1000 150'/%3E%3C/polygon%3E%3Cpolygon points='500,650 550,600 600,650 550,700'%3E%3CanimateTransform attributeName='transform' attributeType='XML' type='rotate' dur='50s' repeatCount='indefinite' values='0 550 650; 360 550 650'/%3E%3C/polygon%3E%3C/g%3E%3Cg fill='%2300D7D7' opacity='0.06'%3E%3Ccircle cx='100' cy='400' r='3'%3E%3CanimateTransform attributeName='transform' attributeType='XML' type='translate' dur='8s' repeatCount='indefinite' values='0,0; 30,20; 0,0'/%3E%3C/circle%3E%3Ccircle cx='300' cy='200' r='2'%3E%3CanimateTransform attributeName='transform' attributeType='XML' type='translate' dur='12s' repeatCount='indefinite' values='0,0; -20,40; 0,0'/%3E%3C/circle%3E%3Ccircle cx='700' cy='600' r='4'%3E%3CanimateTransform attributeName='transform' attributeType='XML' type='translate' dur='15s' repeatCount='indefinite' values='0,0; 40,-30; 0,0'/%3E%3C/circle%3E%3Ccircle cx='900' cy='300' r='2.5'%3E%3CanimateTransform attributeName='transform' attributeType='XML' type='translate' dur='10s' repeatCount='indefinite' values='0,0; -25,35; 0,0'/%3E%3C/circle%3E%3Ccircle cx='1100' cy='500' r='3.5'%3E%3CanimateTransform attributeName='transform' attributeType='XML' type='translate' dur='14s' repeatCount='indefinite' values='0,0; 35,-25; 0,0'/%3E%3C/circle%3E%3Ccircle cx='50' cy='600' r='2'%3E%3CanimateTransform attributeName='transform' attributeType='XML' type='translate' dur='11s' repeatCount='indefinite' values='0,0; 25,30; 0,0'/%3E%3C/circle%3E%3Ccircle cx='1150' cy='100' r='3'%3E%3CanimateTransform attributeName='transform' attributeType='XML' type='translate' dur='13s' repeatCount='indefinite' values='0,0; -30,25; 0,0'/%3E%3C/circle%3E%3Ccircle cx='450' cy='450' r='2.5'%3E%3CanimateTransform attributeName='transform' attributeType='XML' type='translate' dur='16s' repeatCount='indefinite' values='0,0; 35,20; 0,0'/%3E%3C/circle%3E%3C/g%3E%3C/svg%3E") center/cover no-repeat;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-text h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .highlight {
+            background: linear-gradient(135deg, #00D7D7 0%, #84F11E 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-text p {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .trust-indicators {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .trust-indicators span {
+            color: #14D64D;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        /* Calculator Card */
+        .calculator-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .calculator-card h2 {
+            color: white;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .sample-button-container {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .sample-button {
+            background: transparent;
+            color: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .sample-button:hover {
+            color: white;
+            border-color: rgba(255, 255, 255, 0.6);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 8px;
+            font-size: 1rem;
+            color: white;
+            transition: all 0.3s;
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #4ade80;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .unit {
+            position: absolute;
+            right: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+
+        .calculate-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #00D7D7 0%, #84F11E 100%);
+            color: #0f4c3a;
+            padding: 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 1.5rem;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 215, 215, 0.3);
+        }
+
+        .result {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            display: none;
+        }
+
+        .result.show {
+            display: block;
+        }
+
+        .result h3 {
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .density-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: white;
+            margin: 0.5rem 0;
+        }
+
+        .freight-class {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #4ade80;
+        }
+
+        .result p {
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+            margin-top: 0.5rem;
+        }
+
+        .nmfc-section {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: left;
+        }
+
+        .nmfc-text {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .nmfc-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .nmfc-hidden {
+            position: relative;
+            background: rgba(229, 231, 235, 0.8);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: rgba(15, 76, 58, 0.15);
+            font-weight: 600;
+            display: inline-block;
+            user-select: none;
+            cursor: pointer;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+        }
+
+        .nmfc-hidden::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, 
+                rgba(255, 255, 255, 0.6) 25%, 
+                rgba(229, 231, 235, 0.4) 25%, 
+                rgba(229, 231, 235, 0.4) 50%, 
+                rgba(255, 255, 255, 0.6) 50%, 
+                rgba(255, 255, 255, 0.6) 75%, 
+                rgba(229, 231, 235, 0.4) 75%);
+            background-size: 8px 8px;
+            border-radius: 6px;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        .nmfc-hidden::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 6px;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        .copy-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: transparent;
+            color: #0f4c3a;
+            border: 1px solid #0f4c3a;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .copy-button:hover {
+            background: #0f4c3a;
+            color: white;
+        }
+
+        .nmfc-signup {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #00D7D7 0%, #84F11E 100%);
+            color: #0f4c3a;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.8rem;
+            border: none;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            display: block;
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+            white-space: nowrap;
+            z-index: 15;
+        }
+
+        .nmfc-container:hover .copy-button {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .nmfc-container:hover .nmfc-signup {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .nmfc-signup:hover {
+            transform: translate(-50%, -50%) translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 215, 215, 0.3);
+        }
+
+        /* Instructions Section */
+        .instructions-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .instruction-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border-left: 4px solid #4ade80;
+        }
+
+        .step-number {
+            background: #4ade80;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .step-content h3 {
+            color: #0f4c3a;
+            margin-bottom: 0.5rem;
+            font-size: 1.25rem;
+        }
+
+        .step-content p {
+            color: #4b5563;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        /* Features Section */
+        .features {
+            background: white;
+            padding: 4rem 0;
+        }
+
+        .features h2 {
+            text-align: center;
+            color: #0f4c3a;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: #0f4c3a;
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta-section p {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .hero-text h1 {
+                font-size: 2rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .features h2 {
+                font-size: 2rem;
+            }
+
+            .cta-section h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Powered by Ribbon -->
+    <div class="powered-by-ribbon">
+        <span>Powered by</span>
+        <svg class="loadsmart-logo" viewBox="0 0 236 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#clip0_3375_1314)">
+                <path d="M123.823 16.8942C122.452 15.4925 120.323 14.5364 117.619 14.5364C112.912 14.5364 107.5 17.8547 107.5 24.9368C107.5 32.019 113.12 35.3373 117.537 35.3373C120.245 35.3373 122.452 34.2557 123.828 32.6982V34.9392H129.534V5.7064H123.828V16.8942H123.823ZM118.658 30.2928C115.495 30.2928 113.077 27.9739 113.077 24.8936C113.077 21.8132 115.491 19.5333 118.658 19.5333C121.825 19.5333 123.988 21.9344 123.988 24.8936C123.988 27.8528 121.738 30.2928 118.658 30.2928Z" fill="#14D64D"/>
+                <path d="M236 20.2644V14.9344H232.085V7.22926L226.378 10.3702V26.2563C226.378 32.7761 228.541 34.9392 235.165 34.9392H236V29.8212C232.5 29.8212 232.085 29.341 232.085 26.2217V20.2731H236V20.2644Z" fill="#14D64D"/>
+                <path d="M70.7697 14.5321C64.7735 14.5321 59.9843 19.1699 59.9843 24.9325C59.9843 30.6951 64.7735 35.3329 70.7697 35.3329C76.766 35.3329 81.5552 30.6951 81.5552 24.9325C81.5552 19.1699 76.766 14.5321 70.7697 14.5321ZM70.7697 30.1284C67.8149 30.1284 65.5652 27.7706 65.5652 24.9282C65.5652 22.0858 67.8149 19.728 70.7697 19.728C73.7246 19.728 76.0175 22.0901 76.0175 24.9282C76.0175 27.7662 73.6857 30.1284 70.7697 30.1284Z" fill="#14D64D"/>
+                <path d="M99.6219 16.8942C98.2461 15.4925 96.1219 14.5364 93.4179 14.5364C88.7109 14.5364 83.2987 17.8547 83.2987 24.9368C83.2987 32.019 88.9186 35.3373 93.3357 35.3373C96.044 35.3373 98.2504 34.2557 99.6262 32.6982V34.9392H105.333V14.9387H99.6262V16.8986L99.6219 16.8942ZM94.4563 30.2928C91.2937 30.2928 88.8753 27.9739 88.8753 24.8936C88.8753 21.8132 91.2894 19.5333 94.4563 19.5333C97.6231 19.5333 99.7863 21.9344 99.7863 24.8936C99.7863 27.8528 97.5366 30.2928 94.4563 30.2928Z" fill="#14D64D"/>
+                <path d="M141.959 22.4535C138.836 21.8522 137.628 21.532 137.628 20.6538C137.628 19.7755 138.463 19.0141 140.337 19.0141C142.21 19.0141 143.625 19.8924 144.17 21.2119L149.21 19.1742C147.713 16.3751 145.048 14.5364 140.384 14.5364C135.219 14.4542 131.849 17.4566 131.849 20.8139C131.849 25.0969 135.595 26.3342 139.346 26.9745C141.76 27.4158 143.802 27.7359 143.802 28.8175C143.802 29.778 142.803 30.6173 140.929 30.6173C138.887 30.6173 137.308 29.739 136.556 27.9003L131.1 29.938C132.597 33.4597 135.638 35.3373 140.679 35.3373C146.675 35.4151 149.509 31.5777 149.509 28.6575C149.509 24.3355 145.468 23.1371 141.972 22.4579L141.959 22.4535Z" fill="#14D64D"/>
+                <path d="M175.843 14.5321C173.134 14.5321 170.759 15.7737 169.345 17.6903C168.094 15.6482 165.888 14.5321 162.933 14.5321C160.601 14.5321 158.685 15.4925 157.395 17.05V14.9301H151.732V34.9306H157.439V24.011C157.439 20.6495 159.022 19.2131 161.185 19.2131C163.725 19.2131 164.806 20.7749 164.806 23.4529V34.9349H170.595V24.0153C170.595 20.6538 172.178 19.2175 174.341 19.2175C176.881 19.2175 177.963 20.7792 177.963 23.4572V34.9392H183.751V22.7391C183.751 17.5821 181.125 14.5407 175.838 14.5407L175.843 14.5321Z" fill="#14D64D"/>
+                <path d="M202.173 16.8942C200.801 15.4925 198.677 14.5364 195.969 14.5364C191.262 14.5364 185.849 17.8547 185.849 24.9368C185.849 32.019 191.469 35.3373 195.882 35.3373C198.59 35.3373 200.797 34.2557 202.173 32.6982V34.9392H207.879V14.9387H202.173V16.8986V16.8942ZM197.011 30.2928C193.845 30.2928 191.43 27.9739 191.43 24.8936C191.43 21.8132 193.845 19.5333 197.011 19.5333C200.178 19.5333 202.341 21.9344 202.341 24.8936C202.341 27.8528 200.092 30.2928 197.011 30.2928Z" fill="#14D64D"/>
+                <path d="M216.549 18.2137V14.9344H210.886V34.9349H216.592V25.4949C216.592 21.7743 217.925 20.2558 220.966 20.2558H224.587V14.9344H222.294C219.461 14.9344 217.587 16.1328 216.549 18.2137Z" fill="#14D64D"/>
+                <path d="M57.7562 5.7064H52.0498V34.9349H57.7562V5.7064Z" fill="#14D64D"/>
+                <path d="M27.0913 14.1167V24.833H40.637V1.14214C40.637 0.510504 40.1222 0 39.4819 0H15.7997V13.5457H26.5116C26.8318 13.5457 27.087 13.8009 27.087 14.1167H27.0913Z" fill="#14D64D"/>
+                <path d="M14.1211 27.0913C13.8009 27.0913 13.5457 26.8361 13.5457 26.5203V0L0.337452 13.0568C0.129789 13.2645 0 13.55 0 13.8658V39.4992C0 40.1308 0.51483 40.6413 1.15512 40.6413H26.6154C26.9313 40.6413 27.2211 40.5159 27.4288 40.3082L40.637 27.0957H14.1211V27.0913Z" fill="#14D64D"/>
+            </g>
+            <defs>
+                <clipPath id="clip0_3375_1314">
+                    <rect width="236" height="40.637" fill="white"/>
+                </clipPath>
+            </defs>
+        </svg>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>Instant <span class="highlight">Freight Class</span> Calculator</h1>
+                    <p>Calculate your LTL freight class in seconds. Get accurate density calculations and save up to 30% on shipping costs with proper classification.</p>
+                    <div class="trust-indicators">
+                        <span>✓ Free to use</span>
+                        <span>✓ Instant results</span>
+                        <span>✓ Industry standard</span>
+                    </div>
+                </div>
+
+                <!-- Calculator -->
+                <div class="calculator-card" id="calculator">
+                    <h2>Calculate Your Freight Class</h2>
+                    
+                    <div class="sample-button-container">
+                        <button class="sample-button" onclick="fillSampleData()">Try Standard Pallet Sample</button>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Shipment Dimensions</label>
+                        <div class="form-row" style="grid-template-columns: 1fr 1fr 1fr;">
+                            <div class="input-group">
+                                <input type="number" id="length" placeholder="Length" step="0.1">
+                                <span class="unit">in</span>
+                            </div>
+                            <div class="input-group">
+                                <input type="number" id="width" placeholder="Width" step="0.1">
+                                <span class="unit">in</span>
+                            </div>
+                            <div class="input-group">
+                                <input type="number" id="height" placeholder="Height" step="0.1">
+                                <span class="unit">in</span>
+                            </div>
+                        </div>
+                        <div class="form-row" style="margin-top: 1rem;">
+                            <div class="input-group">
+                                <input type="number" id="weight" placeholder="Weight" step="0.1">
+                                <span class="unit">lbs</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="calculate-btn" onclick="calculateFreightClass()">Calculate Freight Class</button>
+
+                    <div class="result" id="result">
+                        <h3>Your Freight Classification</h3>
+                        <div class="density-value" id="densityValue">0.00 lb/ft³</div>
+                        <div class="freight-class" id="freightClass">Class: ---</div>
+                        <p id="samples"></p>
+                        <div class="nmfc-section">
+                            <p class="nmfc-text">NMFC code: 
+                                <span class="nmfc-container">
+                                    <span class="nmfc-hidden">130340 - Sprayers, cement, paint, plaster or grease</span>
+                                    <button class="copy-button">Copy</button>
+                                    <a href="#" class="nmfc-signup">Sign up to have access to NMFC tool</a>
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Instructions Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2>How to Use the Freight Class Calculator</h2>
+            <div class="instructions-container">
+                <div class="instruction-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Measure Your Freight</h3>
+                        <p>Measure your freight and enter the length, width, height and shipment weight.</p>
+                        <p><strong>Note:</strong> When you weigh your shipment, include the pallet or other packaging.</p>
+                    </div>
+                </div>
+                
+                <div class="instruction-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Get Your LTL Freight Class</h3>
+                        <p>Your estimated LTL freight class number* will be displayed on the screen. As mentioned above, there are 18 classes, numbered 50 to 500. Your actual class will be based on your commodity's demonstrated transportation characteristics.</p>
+                    </div>
+                </div>
+
+                <div class="instruction-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Take the Next Step</h3>
+                        <p>Once you've determined your LTL freight class, create an LTL freight shipping label or schedule an LTL freight pickup with ShipperGuide TMS.</p>
+                        <div style="margin-top: 1.5rem;">
+                            <a href="#" class="cta-button">Get Started with ShipperGuide TMS</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section" id="cta">
+        <div class="container">
+            <h2>Ready to Optimize Your Shipping?</h2>
+            <p>Join thousands of shippers who trust our tools to streamline their logistics operations.</p>
+            <a href="#" class="cta-button" style="font-size: 1.1rem; padding: 1rem 2rem;">Get Advanced Tools</a>
+        </div>
+    </section>
+
+    <script>
+        // Freight class lookup table - based on your provided table
+        const freightClasses = [
+            { minDensity: 30, maxDensity: Infinity, class: 60, samples: "Ceramic tiles, bottle liquids" },
+            { minDensity: 22.5, maxDensity: 30, class: 65, samples: "Car parts, box of books" },
+            { minDensity: 15, maxDensity: 22.5, class: 70, samples: "Food items, boxed paper" },
+            { minDensity: 12, maxDensity: 15, class: 85, samples: "Engines, pharmaceuticals" },
+            { minDensity: 10, maxDensity: 12, class: 92.5, samples: "Computer, monitors" },
+            { minDensity: 8, maxDensity: 10, class: 100, samples: "Cabinets, table drill press" },
+            { minDensity: 6, maxDensity: 8, class: 125, samples: "Sheet metal, book cases" },
+            { minDensity: 4, maxDensity: 6, class: 175, samples: "Clothing, stuffed furniture" },
+            { minDensity: 2, maxDensity: 4, class: 250, samples: "Televisions, box springs" },
+            { minDensity: 1, maxDensity: 2, class: 300, samples: "Wood cabinets, tables" },
+            { minDensity: 0, maxDensity: 1, class: 400, samples: "Deer antlers, light fixtures" }
+        ];
+
+        function fillSampleData() {
+            document.getElementById('length').value = '40';
+            document.getElementById('width').value = '40';
+            document.getElementById('height').value = '30';
+            document.getElementById('weight').value = '44000';
+            
+            // Add visual feedback
+            const inputs = ['length', 'width', 'height', 'weight'];
+            inputs.forEach(id => {
+                const input = document.getElementById(id);
+                input.style.background = 'rgba(74, 222, 128, 0.2)';
+                setTimeout(() => {
+                    input.style.background = 'rgba(255, 255, 255, 0.15)';
+                }, 1000);
+            });
+        }
+
+        function calculateFreightClass() {
+            const length = parseFloat(document.getElementById('length').value);
+            const width = parseFloat(document.getElementById('width').value);
+            const height = parseFloat(document.getElementById('height').value);
+            const weight = parseFloat(document.getElementById('weight').value);
+
+            // Validation
+            if (!length || !width || !height || !weight) {
+                alert('Please fill in all dimensions and weight');
+                return;
+            }
+
+            if (length <= 0 || width <= 0 || height <= 0 || weight <= 0) {
+                alert('Please enter positive values for all fields');
+                return;
+            }
+
+            // Calculate volume in cubic feet
+            const volumeCubicInches = length * width * height;
+            const volumeCubicFeet = volumeCubicInches / 1728; // 1 cubic foot = 1728 cubic inches
+
+            // Calculate density (pounds per cubic foot)
+            const density = weight / volumeCubicFeet;
+
+            // Find freight class
+            let freightClassInfo = freightClasses.find(fc => density >= fc.minDensity && density < fc.maxDensity);
+            
+            if (!freightClassInfo) {
+                freightClassInfo = freightClasses[freightClasses.length - 1]; // Default to lowest class
+            }
+
+            // Display results
+            document.getElementById('densityValue').textContent = density.toFixed(2) + ' lb/ft³';
+            document.getElementById('freightClass').textContent = 'Class: ' + freightClassInfo.class;
+            document.getElementById('samples').textContent = 'Typical items: ' + freightClassInfo.samples;
+            
+            document.getElementById('result').classList.add('show');
+            document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // Allow Enter key to trigger calculation
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                calculateFreightClass();
+            }
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
