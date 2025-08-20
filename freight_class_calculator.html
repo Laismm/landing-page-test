@@ -603,9 +603,9 @@
 
                     <div class="result" id="result">
                         <h3>Your Freight Classification</h3>
-                        <div class="density-value" id="densityValue">0.00 lb/ft³</div>
-                        <div class="freight-class" id="freightClass">Class: ---</div>
-                        <p id="samples"></p>
+                        <div class="density-value" id="densityValue">Enter dimensions to calculate</div>
+                        <div class="freight-class" id="freightClass">Class: Not calculated</div>
+                        <p id="samples">Calculate to see typical items</p>
                         <div class="nmfc-section">
                             <p class="nmfc-text">NMFC code: 
                                 <span class="nmfc-container">
@@ -667,19 +667,19 @@
     </section>
 
     <script>
-        // Freight class lookup table - based on your provided table
+        // Freight class lookup table - CORRECTED ORDER (lowest to highest density)
         const freightClasses = [
-            { minDensity: 30, maxDensity: Infinity, class: 60, samples: "Ceramic tiles, bottle liquids" },
-            { minDensity: 22.5, maxDensity: 30, class: 65, samples: "Car parts, box of books" },
-            { minDensity: 15, maxDensity: 22.5, class: 70, samples: "Food items, boxed paper" },
-            { minDensity: 12, maxDensity: 15, class: 85, samples: "Engines, pharmaceuticals" },
-            { minDensity: 10, maxDensity: 12, class: 92.5, samples: "Computer, monitors" },
-            { minDensity: 8, maxDensity: 10, class: 100, samples: "Cabinets, table drill press" },
-            { minDensity: 6, maxDensity: 8, class: 125, samples: "Sheet metal, book cases" },
-            { minDensity: 4, maxDensity: 6, class: 175, samples: "Clothing, stuffed furniture" },
-            { minDensity: 2, maxDensity: 4, class: 250, samples: "Televisions, box springs" },
+            { minDensity: 0, maxDensity: 1, class: 400, samples: "Deer antlers, light fixtures" },
             { minDensity: 1, maxDensity: 2, class: 300, samples: "Wood cabinets, tables" },
-            { minDensity: 0, maxDensity: 1, class: 400, samples: "Deer antlers, light fixtures" }
+            { minDensity: 2, maxDensity: 4, class: 250, samples: "Televisions, box springs" },
+            { minDensity: 4, maxDensity: 6, class: 175, samples: "Clothing, stuffed furniture" },
+            { minDensity: 6, maxDensity: 8, class: 125, samples: "Sheet metal, book cases" },
+            { minDensity: 8, maxDensity: 10, class: 100, samples: "Cabinets, table drill press" },
+            { minDensity: 10, maxDensity: 12, class: 92.5, samples: "Computer, monitors" },
+            { minDensity: 12, maxDensity: 15, class: 85, samples: "Engines, pharmaceuticals" },
+            { minDensity: 15, maxDensity: 22.5, class: 70, samples: "Food items, boxed paper" },
+            { minDensity: 22.5, maxDensity: 30, class: 65, samples: "Car parts, box of books" },
+            { minDensity: 30, maxDensity: Infinity, class: 60, samples: "Ceramic tiles, bottle liquids" }
         ];
 
         function fillSampleData() {
@@ -700,10 +700,14 @@
         }
 
         function calculateFreightClass() {
+            console.log("=== CALCULATE FUNCTION STARTED ===");
+            
             const length = parseFloat(document.getElementById('length').value);
             const width = parseFloat(document.getElementById('width').value);
             const height = parseFloat(document.getElementById('height').value);
             const weight = parseFloat(document.getElementById('weight').value);
+
+            console.log("Input values:", { length, width, height, weight });
 
             // Validation
             if (!length || !width || !height || !weight) {
@@ -716,6 +720,8 @@
                 return;
             }
 
+            console.log("Validation passed");
+
             // Calculate volume in cubic feet
             const volumeCubicInches = length * width * height;
             const volumeCubicFeet = volumeCubicInches / 1728; // 1 cubic foot = 1728 cubic inches
@@ -723,20 +729,109 @@
             // Calculate density (pounds per cubic foot)
             const density = weight / volumeCubicFeet;
 
-            // Find freight class
-            let freightClassInfo = freightClasses.find(fc => density >= fc.minDensity && density < fc.maxDensity);
+            console.log("Calculations:", {
+                volumeCubicInches: volumeCubicInches,
+                volumeCubicFeet: volumeCubicFeet.toFixed(4),
+                density: density.toFixed(2)
+            });
+
+            // Debug: Show all freight classes and which one should match
+            console.log("Searching freight classes for density:", density.toFixed(2));
+            freightClasses.forEach((fc, index) => {
+                const matches = density >= fc.minDensity && density < fc.maxDensity;
+                console.log(`Class ${fc.class}: ${fc.minDensity} <= ${density.toFixed(2)} < ${fc.maxDensity} = ${matches}`);
+            });
+
+            // Find freight class - FIXED INFINITY LOGIC
+            let freightClassInfo = null;
             
+            // Search through classes to find the right one
+            for (let i = 0; i < freightClasses.length; i++) {
+                const fc = freightClasses[i];
+                
+                // Handle Infinity case properly
+                const matchesRange = density >= fc.minDensity && 
+                    (fc.maxDensity === Infinity || density < fc.maxDensity);
+                
+                console.log(`Checking Class ${fc.class}: ${fc.minDensity} <= ${density.toFixed(2)} < ${fc.maxDensity === Infinity ? '∞' : fc.maxDensity} = ${matchesRange}`);
+                
+                if (matchesRange) {
+                    freightClassInfo = fc;
+                    console.log("✅ Found matching class:", fc.class, "for density range", fc.minDensity, "-", (fc.maxDensity === Infinity ? '∞' : fc.maxDensity));
+                    break;
+                }
+            }
+            
+            // If still no match, use lowest class as fallback
             if (!freightClassInfo) {
-                freightClassInfo = freightClasses[freightClasses.length - 1]; // Default to lowest class
+                freightClassInfo = freightClasses[0]; // Class 400
+                console.log("❌ No match found, using fallback class:", freightClassInfo.class);
             }
 
-            // Display results
-            document.getElementById('densityValue').textContent = density.toFixed(2) + ' lb/ft³';
-            document.getElementById('freightClass').textContent = 'Class: ' + freightClassInfo.class;
-            document.getElementById('samples').textContent = 'Typical items: ' + freightClassInfo.samples;
+            console.log("Final freight class info:", freightClassInfo);
+
+            // Check if result elements exist
+            const densityValueEl = document.getElementById('densityValue');
+            const freightClassEl = document.getElementById('freightClass');
+            const samplesEl = document.getElementById('samples');
+            const resultEl = document.getElementById('result');
             
-            document.getElementById('result').classList.add('show');
-            document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            console.log("DOM elements check:", {
+                densityValue: !!densityValueEl,
+                freightClass: !!freightClassEl,
+                samples: !!samplesEl,
+                result: !!resultEl
+            });
+
+            if (!densityValueEl || !freightClassEl || !samplesEl || !resultEl) {
+                console.error("Missing DOM elements!");
+                return;
+            }
+
+            // Display results - ENSURE ALL ELEMENTS UPDATE
+            const densityText = density.toFixed(2) + ' lb/ft³';
+            const classText = 'Class: ' + freightClassInfo.class;
+            const samplesText = 'Typical items: ' + freightClassInfo.samples;
+            
+            console.log("Setting display values:", {
+                density: densityText,
+                class: classText,
+                samples: samplesText
+            });
+
+            // Update each element and verify the update
+            densityValueEl.textContent = densityText;
+            console.log("Density updated to:", densityValueEl.textContent);
+            
+            freightClassEl.textContent = classText;
+            console.log("Freight class updated to:", freightClassEl.textContent);
+            
+            samplesEl.textContent = samplesText;
+            console.log("Samples updated to:", samplesEl.textContent);
+            
+            // Force a repaint to ensure DOM updates
+            resultEl.style.display = 'block';
+            
+            // Show the results box
+            resultEl.classList.add('show');
+            console.log("Added 'show' class, current classes:", resultEl.className);
+            
+            // Double-check that all text was set correctly
+            setTimeout(() => {
+                console.log("Final verification:");
+                console.log("- Density element text:", densityValueEl.textContent);
+                console.log("- Class element text:", freightClassEl.textContent);
+                console.log("- Samples element text:", samplesEl.textContent);
+                console.log("- Result box visible:", window.getComputedStyle(resultEl).display !== 'none');
+            }, 50);
+            
+            // Scroll to results
+            setTimeout(() => {
+                resultEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                console.log("Scrolled to results");
+            }, 100);
+            
+            console.log("=== CALCULATE FUNCTION COMPLETED ===");
         }
 
         // Allow Enter key to trigger calculation
